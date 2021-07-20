@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/main/DedicatedServer.gd" type="Script" id=1]
+[ext_resource path="res://scenes/main/StateProcessing.gd" type="Script" id=2]
+
+[node name="DedicatedServer" type="Node"]
+script = ExtResource( 1 )
+
+[node name="StateProcessing" type="Node" parent="."]
+script = ExtResource( 2 )
