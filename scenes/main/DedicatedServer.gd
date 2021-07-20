@@ -41,6 +41,13 @@ func _peer_disconnected(pid: int):
 
 func _ready():
 	print("Version " + version)
+	var arguments = {}
+	for argument in OS.get_cmdline_args():
+		if argument.find("=") > -1:
+			var key_value = argument.split("=")
+			arguments[key_value[0].lstrip("--")] = key_value[1]
+	if arguments.has("port"):
+		port = arguments["port"]
 	start_server()
 	
 remote func receive_player_state(player_state):
