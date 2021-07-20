@@ -46,8 +46,6 @@ func _ready():
 		if argument.find("=") > -1:
 			var key_value = argument.split("=")
 			arguments[key_value[0].lstrip("--")] = key_value[1]
-	print(arguments)
-	print(OS.get_cmdline_args())
 	if arguments.has("port"):
 		port = arguments["port"]
 	start_server()
