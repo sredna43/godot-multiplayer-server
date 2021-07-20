@@ -1,7 +1,7 @@
 extends Node
 
 var network = NetworkedMultiplayerENet.new()
-var port = 25565
+var port = 11998
 var max_players = 10
 var player_state_collection: Dictionary = {}
 
