@@ -1,7 +1,9 @@
 extends Node
 
+var version = "1.0"
+
 var network = NetworkedMultiplayerENet.new()
-var port = 11998
+var port = 25565
 var max_players = 10
 var player_state_collection: Dictionary = {}
 
@@ -38,6 +40,7 @@ func _peer_disconnected(pid: int):
 		rpc_id(0, "despawn_player", pid)
 
 func _ready():
+	print("Version " + version)
 	start_server()
 	
 remote func receive_player_state(player_state):
