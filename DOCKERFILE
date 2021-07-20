@@ -40,5 +40,5 @@ RUN mv ${GODOT_GAME_NAME}.pck /godotapp/
 
 # Change to the godotapp space, delete the source,  and run the app
 WORKDIR /godotapp
-run rm -f -R /godotbuildspace
+RUN rm -f -R /godotbuildspace
 CMD godot --main-pack ${GODOT_GAME_NAME}.pck
