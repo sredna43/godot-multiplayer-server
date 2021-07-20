@@ -46,6 +46,7 @@ func _ready():
 		if argument.find("=") > -1:
 			var key_value = argument.split("=")
 			arguments[key_value[0].lstrip("--")] = key_value[1]
+	print(arguments)
 	if arguments.has("port"):
 		port = arguments["port"]
 	start_server()
