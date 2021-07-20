@@ -28,6 +28,10 @@ RUN wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${G
     && mv templates/* ~/.local/share/godot/templates/${GODOT_VERSION}.stable \
     && rm -f Godot_v${GODOT_VERSION}-stable_export_templates.tpz Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip
 
+# Expose the correct ports
+EXPOSE 25565/tcp
+EXPOSE 25565/udp
+
 # Make needed directories for container
 RUN mkdir /godotapp
 RUN mkdir /godotbuildspace
