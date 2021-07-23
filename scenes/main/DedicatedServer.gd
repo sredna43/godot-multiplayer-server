@@ -95,10 +95,12 @@ remote func determine_latency(client_time):
 	rpc_id(pid, "return_latency", client_time)
 	
 remote func start_game():
+	print("asking players to ready up")
 	rpc("ready_up")
 	
 remote func ready_to_race():
 	readied_up_players += 1
+	print(readied_up_players + " are ready to go, need " + str(player_state_collection.size()) + " total")
 	if readied_up_players == player_state_collection.size():
 		rpc("start_race")
 	
