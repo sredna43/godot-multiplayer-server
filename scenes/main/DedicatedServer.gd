@@ -3,13 +3,15 @@ extends Node
 var version = "1.0"
 
 var network = NetworkedMultiplayerENet.new()
-var port: int = 1998
+var port: int = 56901
 var max_players = 10
 var player_state_collection: Dictionary = {}
 var lobby_server = "http://127.0.0.1:56900"
 
 onready var player_container_scene = preload("res://scenes/instances/PlayerContainer.tscn")
 onready var http_request = HTTPRequest.new()
+
+var readied_up_players = 0
 
 func _ready():
 	get_tree().set_auto_accept_quit(false)
@@ -91,6 +93,14 @@ remote func fetch_server_time(client_time):
 remote func determine_latency(client_time):
 	var pid = get_tree().get_rpc_sender_id()
 	rpc_id(pid, "return_latency", client_time)
+	
+remote func start_game():
+	rpc("ready_up")
+	
+remote func ready_to_race():
+	readied_up_players += 1
+	if readied_up_players == player_state_collection.size():
+		rpc("start_race")
 	
 func _reset_server():
 	http_request.request(lobby_server + "/server/available/" + str(port))
