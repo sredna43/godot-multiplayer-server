@@ -24,7 +24,7 @@ func _ready():
 			var key_value = argument.split("=")
 			arguments[key_value[0].lstrip("--")] = key_value[1]
 	if arguments.has("port"):
-		port = arguments["port"]
+		port = int(arguments["port"])
 	http_request.request(lobby_server + "/server/add/" + str(port))
 
 func _handle_lobby_return(_result, response_code, _headers, body):
