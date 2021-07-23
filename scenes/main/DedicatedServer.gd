@@ -6,7 +6,7 @@ var network = NetworkedMultiplayerENet.new()
 var port: int = 1998
 var max_players = 10
 var player_state_collection: Dictionary = {}
-var lobby_server = "http://127.0.0.1:5000"
+var lobby_server = "http://127.0.0.1:56900"
 
 onready var player_container_scene = preload("res://scenes/instances/PlayerContainer.tscn")
 onready var http_request = HTTPRequest.new()
