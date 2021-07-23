@@ -100,7 +100,7 @@ remote func start_game():
 	
 remote func ready_to_race():
 	readied_up_players += 1
-	print(readied_up_players + " are ready to go, need " + str(player_state_collection.size()) + " total")
+	print(str(readied_up_players) + " are ready to go, need " + str(player_state_collection.size()) + " total")
 	if readied_up_players == player_state_collection.size():
 		rpc("start_race")
 	
