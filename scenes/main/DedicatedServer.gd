@@ -3,11 +3,38 @@ extends Node
 var version = "1.0"
 
 var network = NetworkedMultiplayerENet.new()
-var port = 25565
+var port: int = 1998
 var max_players = 10
 var player_state_collection: Dictionary = {}
+var lobby_server = "http://127.0.0.1:5000"
 
 onready var player_container_scene = preload("res://scenes/instances/PlayerContainer.tscn")
+onready var http_request = HTTPRequest.new()
+
+func _ready():
+	get_tree().set_auto_accept_quit(false)
+	add_child(http_request)
+	var _error = http_request.connect("request_completed", self, "_handle_lobby_return")
+	_error = $LobbyResetTimer.connect("timeout", self, "_reset_server")
+	_error = $ShutdownTimer.connect("timeout", self, "_quit")
+	print("Version " + version)
+	var arguments = {}
+	for argument in OS.get_cmdline_args():
+		if argument.find("=") > -1:
+			var key_value = argument.split("=")
+			arguments[key_value[0].lstrip("--")] = key_value[1]
+	if arguments.has("port"):
+		port = arguments["port"]
+	http_request.request(lobby_server + "/server/add/" + str(port))
+
+func _handle_lobby_return(_result, response_code, _headers, body):
+	if response_code == 200:
+		var json = JSON.parse(body.get_string_from_utf8()).result
+		if json.has("response"):
+			if json.response == "added":
+				start_server()
+			if json.response == "removed":
+				_quit()
 
 func start_server():
 	var _server_status = network.create_server(port, max_players)
@@ -31,6 +58,7 @@ func _peer_connected(pid: int):
 	print("User " + str(pid) + " connected")
 	add_player_instance(pid)
 	rpc_id(0, "spawn_player", pid, Vector2(350, 350))
+	$LobbyResetTimer.stop()
 	
 func _peer_disconnected(pid: int):
 	print("User " + str(pid) + " disconnected")
@@ -38,17 +66,8 @@ func _peer_disconnected(pid: int):
 		get_node(str(pid)).queue_free()
 		var _erase_err = player_state_collection.erase(pid)
 		rpc_id(0, "despawn_player", pid)
-
-func _ready():
-	print("Version " + version)
-	var arguments = {}
-	for argument in OS.get_cmdline_args():
-		if argument.find("=") > -1:
-			var key_value = argument.split("=")
-			arguments[key_value[0].lstrip("--")] = key_value[1]
-	if arguments.has("port"):
-		port = arguments["port"]
-	start_server()
+		if player_state_collection.size() == 0:
+			$LobbyResetTimer.start()
 	
 remote func receive_player_state(player_state):
 	var pid: int = get_tree().get_rpc_sender_id()
@@ -68,3 +87,14 @@ remote func fetch_server_time(client_time):
 remote func determine_latency(client_time):
 	var pid = get_tree().get_rpc_sender_id()
 	rpc_id(pid, "return_latency", client_time)
+	
+func _reset_server():
+	http_request.request(lobby_server + "/server/available/" + str(port))
+	
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		http_request.request(lobby_server + "/server/remove/" + str(port))
+		$ShutdownTimer.start()
+		
+func _quit():
+	get_tree().quit()
