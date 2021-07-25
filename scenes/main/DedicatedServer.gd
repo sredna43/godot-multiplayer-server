@@ -98,7 +98,7 @@ remote func determine_latency(client_time):
 	
 remote func start_game():
 	print("asking players to ready up")
-	rpc("ready_up", Vector2(rng.randf_range(9, 67) * 10, 430))
+	rpc("ready_up")
 	
 remote func ready_to_race():
 	readied_up_players += 1
