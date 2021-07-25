@@ -105,6 +105,7 @@ remote func ready_to_race():
 		rpc("start_race")
 	
 func _reset_server():
+	readied_up_players = 0
 	http_request.request(lobby_server + "/server/available/" + str(port))
 	
 func _notification(what):
