@@ -8,6 +8,7 @@ var max_players = 10
 var player_state_collection: Dictionary = {}
 var lobby_server = "http://127.0.0.1:56900"
 var rng = RandomNumberGenerator.new()
+var winner
 
 onready var player_container_scene = preload("res://scenes/instances/PlayerContainer.tscn")
 onready var http_request = HTTPRequest.new()
@@ -82,8 +83,9 @@ remote func receive_player_state(player_state):
 	if player_state_collection.has(pid):
 		if player_state_collection[pid]["T"] < player_state["T"]:
 			player_state_collection[pid] = player_state
-		if player_state_collection[pid]["P"].y < -1069:
+		if player_state_collection[pid]["P"].y < -1069 and not winner:
 			rpc("winner", pid)
+			winner = true
 	else:
 		player_state_collection[pid] = player_state
 
@@ -107,6 +109,7 @@ remote func ready_to_race():
 	print(str(readied_up_players) + " are ready to go, need " + str(player_state_collection.size()) + " total")
 	if readied_up_players >= player_state_collection.size():
 		rpc("start_race")
+		winner = false
 	
 func _reset_server():
 	readied_up_players = 0
