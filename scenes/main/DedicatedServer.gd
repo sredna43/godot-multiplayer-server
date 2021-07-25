@@ -65,7 +65,7 @@ func fill_player_container(_player_conatiner):
 func _peer_connected(pid: int):
 	print("User " + str(pid) + " connected")
 	add_player_instance(pid)
-	rpc_id(0, "spawn_player", pid, Vector2(350, 350))
+	rpc_id(0, "spawn_player", pid, Vector2(rng.randf_range(9, 67) * 10, 350))
 	$LobbyResetTimer.stop()
 	
 func _peer_disconnected(pid: int):
