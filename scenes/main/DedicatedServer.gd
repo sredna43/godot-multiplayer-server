@@ -7,6 +7,7 @@ var port: int = 56901
 var max_players = 10
 var player_state_collection: Dictionary = {}
 var lobby_server = "http://127.0.0.1:56900"
+var rng = RandomNumberGenerator.new()
 
 onready var player_container_scene = preload("res://scenes/instances/PlayerContainer.tscn")
 onready var http_request = HTTPRequest.new()
@@ -14,6 +15,7 @@ onready var http_request = HTTPRequest.new()
 var readied_up_players = 0
 
 func _ready():
+	rng.randomize()
 	get_tree().set_auto_accept_quit(false)
 	add_child(http_request)
 	var _error = http_request.connect("request_completed", self, "_handle_lobby_return")
@@ -96,7 +98,7 @@ remote func determine_latency(client_time):
 	
 remote func start_game():
 	print("asking players to ready up")
-	rpc("ready_up")
+	rpc("ready_up", Vector2(rng.randf_range(9, 67) * 10, 430))
 	
 remote func ready_to_race():
 	readied_up_players += 1
