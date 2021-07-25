@@ -82,6 +82,8 @@ remote func receive_player_state(player_state):
 	if player_state_collection.has(pid):
 		if player_state_collection[pid]["T"] < player_state["T"]:
 			player_state_collection[pid] = player_state
+		if player_state_collection[pid]["P"].y < -1069:
+			rpc("winner", pid)
 	else:
 		player_state_collection[pid] = player_state
 
