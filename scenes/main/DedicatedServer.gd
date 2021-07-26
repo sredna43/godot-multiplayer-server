@@ -6,7 +6,7 @@ var network = NetworkedMultiplayerENet.new()
 var port: int = 56901
 var max_players = 10
 var player_state_collection: Dictionary = {}
-var lobby_server = "http://127.0.0.1:56900"
+var lobby_server = "http://161.35.124.177:56900"
 var rng = RandomNumberGenerator.new()
 var winner
 
